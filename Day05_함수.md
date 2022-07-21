@@ -1,7 +1,7 @@
 # 함수
 
 - for what? 
-  - 분해 : 기능을 분해하고, 재사용 가능하게 만들고
+  - 분해 : 기능을 분해하고, 재사용 가능하도록 함
   - 추상화 : 복잡한 내용을 모르더라도 사용할 수 있도록, 재사용성과 가독성, 생산성을 위하며 내부 구조를 변경할 게 아니라면 몰라도 무방
 
 - 함수의 종류
@@ -12,7 +12,7 @@
   - 사용자 정의 함수
     - 사용자가 직접 만드는 함수
 
-- 함수의 정의
+- 함수의 정의  
   특정한 기능을 하는 코드의 조각(묶음), 함수 안에도 저장과 처리가 담김
 
 - 함수 기본 구조
@@ -21,7 +21,7 @@
   - 문서화(Docstring) : ex. sum이 뭐하는 건지 설명
   - 범위(Scope)
   - 결과값(Output)
-
+ 
   ```
   def function_name (parameter)
       Docstring 
@@ -38,16 +38,18 @@
   - Value returning function
     - 함수 실행 후, return하게 되면 값 반한 후 바로 종료
 
-  - 두 개 이상의 return 반환 -> Tuple 활용 (+ 다른 컨테이너도 가능)
+  - 두 개 이상의 return 반환 -> Tuple 활용 (or 리스트와 같은 컨테이너 활용)
   ```
   def minus_and_product(x, y):
       return x - y, x * y
-      !!!!덜 적음!!!!
+  y = minus_and_product(4, 5)
+  print(y) # (-1, 20)
+  print(type(y)) # <class 'tuple'>
   ```
   ```
   # 회문으로 이뤄진 리스트 만들기
 
-  word_list = ['우영우', '파이썬']
+  word_list = ['우영우', '별똥별', '파이썬']
   def is_palindrome(word_list):
       palindrome_list = []
       for word in word_list:
