@@ -38,7 +38,7 @@ c.f. 숫자가 넘어갔을 때 어떻게 할 것인가 Z -> A로 어떻게?
   - .isnumeric() : 숫자스러운 것까지 True
   
 - 문자열 변경 메서드
-  - s.replace(old, new[, count]) : 바꿀 대상 글자를 count번만 새로운 글자로 바꿔서 반환
+  - s.replace(old, new[, count]) : 바꿀 대상 글자를 count번만 새로운 글자로 바꿔서 반환 / vs .sort() : 문자열은 immmutable이니까 repalce해도 후에 원본을 print하면 원본이 유지된다
   - s.strip([chars]) : 공백이나 특정 문자를 제거 / stirp, lstrip, rstrip
   - s.split(sep = None, maxsplit = -1) : 공백이나 특정 문자를 기준으로 분리해서 리스트로 만들어짐
     - sep이 None이면 연속된 공백문자를 단일한 공백문자로 간주, 
@@ -110,6 +110,13 @@ c.f. 숫자가 넘어갔을 때 어떻게 할 것인가 Z -> A로 어떻게?
 
 ### 얕은 복사와 깊은 복사
 slice 연산자 활용하여 같은 원소를 가진 리스트지만 연산된 결과를 복사 (다른 주소)
+mutable과 immutable에 대한 이해 필요
+```
+a = "hello"
+a += "python"
+print(a) ## "hellopython" 이지만 이걸로 바뀐 것은 아니다
+
+```
 ```
 a = [1, 2, 3]
 b = a[:] ## 내용물 복사해옴 (1차원에서만 가능)
@@ -128,3 +135,37 @@ print(a, b) ## [1, 2, 3] [5, 2, 3]
   b[2][0] = 0
   print(a, b) ## [1, 2, ['a', 'b']] [1, 2, [0, 'b']]
   ```
+1) 할당
+```
+a = [1, 2, 3]
+b = a
+print(a, b) ## [1, 2, 3] [1, 2, 3]
+b[0] = 4
+print(a, b) ## [4, 2, 3] [4, 2, 3]
+
+# String의 경우
+a = "hello"
+b = a
+a += "Python"
+print(a, b) ## helloPython hello
+
+## 왜 얜 다를까? 문자열은 더해질 때 새롭게 만든다 because immutable
+```
+2) 얕은 복사
+```
+a = [1, 2, 3]
+b = a[0:3] ## 동일: b = a[:], b = list(a)
+b[0] = 4
+print(a, b) ## [1, 2, 3] [4, 2, 3]
+
+# list 안에 list가 있는 경우
+또 그대로 수정한 그대로 둘 다 반영됨
+```
+3) 깊은 복사
+```
+import copy
+a = 1, 2, ['5', '6']
+b = copy.deepcopy(a)
+a[2][0] = 7
+print(a, b) ## 깊은 복사를 통해 가리키는 [5, 6]을 담은 리스트가 따로 생성되어 독립적인 개체가 됨
+```
