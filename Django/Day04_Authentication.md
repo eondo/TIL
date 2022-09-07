@@ -114,7 +114,7 @@ Django는 database-backed sessions 저장 방식을 기본 값으로 사용하�
 첫번째 칸 KEY만 클라이언트에 브라우저에 주고, 실제 사용자에 대한 데이터는 2번째 컬럼은 서버에 들고 있겠다, 키만 다음 요청마다 보내면 됨. 중간에 확인하고 분석, 응답 등 session 메커니즘은 Django가 알아서 해줌
 
 # Authentication in Web requests (요청에 대한 인증을 진행해보자)
-🔥 Django가 제공하는 인증 완련 built-in forms 익히기
+🔥 Django가 제공하는 인증 관련 built-in forms 익히기
 - 이전 학습에서 Form, ModelForm을 배우면서 직접 ArticleForm을 만들었지만 "인증"은 직접 form을 구현하기 어렵기 때문에 기본 built-in-forms를 제공함
 
 # 📌 Login
@@ -123,15 +123,16 @@ Django는 database-backed sessions 저장 방식을 기본 값으로 사용하�
 1. admin 계정을 하나 만듦
 ```
 ## AuthenticationForm
-로그인을 위한 built-in-form
-- 로그인 진행할 페이지를 보여주는 view 함수 필요
+: 로그인을 위한 built-in-form
+**login(request, user)**
+
 - 로그인도 사실 2가지 처리가 필요함 (페이지, 인증)
 - 페이지는 GET, 인증은 POST로 new-create, edit-update 구조처럼 메서드로 분화해서 한 번에 처리할 수 있음
 <과정>
-  1. 로그인을 진행할 페이지를 보여줄 view 함수 필요
-  2. accounts앱의 url에서 path('login/', views.login, name='login), 작성
+  1. 로그인을 진행할 페이지를 보여줄 view 함수 필요하니까
+  2. accounts앱의 url에서 path('login/', views.login, name='login'), 작성
   3. view에서 login 함수 작성
-    - 로그인을 하기 위한 페이지가 리턴, 필요함(GET에 대한 처리) + 로그인을 실제 진행하기 위한 인증 과정이 필요(POST에 대한 처리) -> 메서드로 분화해서 한 번에 처리할 수 있음
+    - 로그인을 하기 위한 페이지가 리턴되는 것이 필요함(GET에 대한 처리) + 로그인을 실제 진행하기 위한 인증 과정이 필요(POST에 대한 처리) -> 메서드로 분화해서 한 번에 처리할 수 있음
 
   4. def login의 else:부분을 먼저 작성
     ```python
@@ -185,27 +186,32 @@ Django는 database-backed sessions 저장 방식을 기본 값으로 사용하�
 ### 실습 중 설명
 AuthenticationForm은 모델폼일 필요가 없음. DB에 username과 password를 저장하려는 게 아니라 인증 과정에서 쓰일 뿐이니까 모델폼이 아니라 폼으로 만들어짐
 
-### def login 코드 외 설명
-❓ auth_login(request, 유저정보) # 이 인증된 유저 정보를 어디서 들고올 것인가?
+### def login 코드 외 설명 - get_user()
+❓ auth_login(request, 유저정보) -> 이때 이 인증된 유저 정보를 어디서 들고올 것인가?
 request.POST에 사용자 정보 들어있을 거니까 form이라는 인스턴스에 유저 정보가 들어있을 것이다.
 ```
-form.get_user() # 유효성 검사를 통과했을 경우 로그인 한 사용자 객체를 반환
+form.get_user()
+
+AuthenticationForm의 인스턴스 메서드로,
+유효성 검사를 통과했을 경우 로그인 한 사용자 객체를 반환
 ```
+
 입력된 데이터를 판단해서 현재 세션에 데이터를 입력하는 과정이 필요함 : 이 과정을 login이라고 함
 - 첫 번째 인자 HttpRequest(요청 객체)와 두번째 인자 User 객체가 필요함
-- django가 session_id가 있으면 로그인 됐음을 알 수 있음 -> Value가 key 실제 암호화된 데이터는 django가 들고 있기 때문에 django_session 열어보면 session_key와 브라우저의 value가 같음을 알 수 있음. -> 세션 잘 만들어지고 session_key 잘 발급 받은 거면 잘 로그인 됐다
+- django가 session_id가 있으면 로그인 됐음을 알 수 있음 -> Value가 key 실제 암호화된 데이터는 django가 들고 있기 때문에 django_session 열어보면 session_key와 브라우저의 value가 같음을 알 수 있음. -> 세션 잘 만들어지고 session_key 잘 발급 받은 거면 잘 로그인 됐다고 볼 수 있음
 
 ❓ 세션 데이터는 DB에 저장하는데, 그럼 모든 쿠키 데이터를 서버에 저장하면 안되나? 왜 어떤 건 브라우저에 저장하고, 어떤 건 서버에 해?
 -> 과부화 방지를 위해 서버가 관리해야 하는 대상이 아니라면 브라우저가 저장하게 위탁하기 때문, 어떤 것을 서버에, 어떤 것을 브라우저에 관리할지 결정하는 것도 현업에 중요
 
+- 템플릿에서 인증 관련 데이터를 출력하는 방법
 ### 현재 로그인 되어있는 유저 정보 출력하기
-❓ 로그인하면 됐다고 인증에 관련한 데이터를 출력하는 방법은?
-어떻게 base.html에 context를 받아오지 않고도 {{ user }}이 출력되는가?
+❓ 로그인하면 됐다고 인증에 관련한 데이터를 출력하는 방법 -> base.html에서 {{ user }} 사용
+❓ 어떻게 base.html에 context를 받아오지 않고도 {{ user }}이 출력되는가?
 -> 'django.contrib.auth.context_processors.auth'가 로드되고 있어서 모든 template에서 user 객체를 출력할 수 있음
 
 #### context processors
-템플릿이 렌더링 될 때 호출 가능한 컨텍스트 데이터 목록
-그럼 실제로 context를 사용할 때, view에서 context로 key값이 'user'인 것을 넣으면 안 됨.
+- 템플릿이 렌더링 될 때 호출 가능한 컨텍스트 데이터 목록
+(*주의) 따라서, 실제로 context를 사용할 때 view에서 context로 key값이 'user'인 것을 넣으면 안 됨!
 
 - 로그인 하지 않은 경우는 anonymous 유저로 출력됨
 - django는 유저를 나타내는 2가지 클래스(User : 인증된 사용자, AnonymousUser : 인증되지 않은 유저)가 존재
@@ -220,7 +226,7 @@ form.get_user() # 유효성 검사를 통과했을 경우 로그인 한 사용�
 - 처리하는 일 2가지
   - 현재 요청에 대한 session data를 DB에서 삭제
   - 클라이언트의 쿠키에서도 sessionid를 삭제
-    - __why?__ 다른 사람이 동일한 웹 브라우저를 사용하여 로그인하고, 이전 사용자의 세션 데이터에 액세스하는 것을 방지
+    - __why?__ 다른 사람이 동일한 웹 브라우저를 사용하여 로그인하고, 이전 사용자의 세션 데이터에 액세스하는 것을 방지하기 위해 2가지를 모두 진행
 
 ### logout 로직 작성
 1. def logout 작성하고 
@@ -228,10 +234,10 @@ form.get_user() # 유효성 검사를 통과했을 경우 로그인 한 사용�
 3. 로그아웃 누르면 이제 username이 상단에 뜨던 게 anonymous user로 바뀜
 
 
-## Authentication with User
+# Authentication with User
 본격적으로 user와 상호작용해보자 (아직 user model을 제대로 안 쓰고 있었음)
 \
-회원 가입, 탈퇴, 정보 수정, 비번 변경 
+회원 가입, 탈퇴, 정보 수정, 비밀번호 변경 
 
 # 📌회원 가입
 User을 CREATE하는 것으로 UserCreationForm을 사용
@@ -247,7 +253,7 @@ User을 CREATE하는 것으로 UserCreationForm을 사용
 2. 회원가입도 사실 2개의 view함수가 필요함을 인지 (회원가입 페이지를 렌더링할 뷰함수 1개 + 그 페이지에서 입력한 걸 받아서 저장을 할 뷰함수 1개) -> create랑 똑같음! 
 3. view에서 usercreationform 만듦
 4. signup하기 편하게 가는 링크 위에 만들어주고
-5. 이제 pass해놨던 부분 채우러 간다 view에
+5. 이제 view함수에 pass해놨던 부분 채우러 간다
 6. 다 하고 이제 signup하면 에러 발생
    -> __why?__ UserCreationForm은 ModelForm이라서 class meta로 어떤 model이 등록되어 있을 텐데 기본 유저로 만들어진 modelform이야. 프로젝트에서 사용할 기본 user를 대체를 했지만 내부 form들을 코드는 바꾸지 않았기 때문에... 우리가 쓰는 accounts.User가 될리가 없다. 그래서 usercreationform을 그대로 못 써!\
    -> __solution!__ 상속의 개념 이용. UserCreationForm 그대로 상속받아서 이름 바꾸고, class Meta의 model만 우리가 쓰는 유저로 덮어쓰자. 그리고 커스텀한 그걸로 form 만들 때 쓰는 클래스를 바꿔줌 걔로.
@@ -274,7 +280,7 @@ AttributeError: 'function' object has no attribute '_meta'
 
 
 # 📌회원 탈퇴
-DB에서 유저를 Delete하는 것
+: DB에서 유저를 Delete하는 것
 
 <로직 작성 과정>
 1. path 작성
@@ -344,12 +350,17 @@ def login(request):
       2. next parameter 보통 검색할 때 출력되는데 뒤에 뭔가 붙어있음 -> 
       ?next=/articles/create/ : 직전에 요청했던 주소임! django는 로그인에 성공하면 여길 들어가겠다 싶어서 남겨준 것.
         근데 안 가줌 -> why? login.html에 보면 action주소에 보면 accounts:login으로 요청을 보내고, 여기엔 next는 없기 때문에...
+
+- 정리하자면 "next" query string parameter
+  - return redirect(request.GET.get('next) or 'articles:index')
+  - login 템플릿에서 form action이 작성되어 있다면 동작하지 않음
 <br>
 <br>
 
 ### 두 데코레이터로 인해 발생하는 구조적 문제
 1. 비로그인 상태롤 detail 페이지에서 
 delete는 POST만 처리할 수 있는데 지금 next는 GET으로 보내고 있으니까 여기서 안 됨 -> 안에서 처리하도록 변경
+즉, @login_required는 GET request method를 처리할 수 있는 view 함수에서만 사용해야 함
 ```python
 @require_POST
 def delete(request, pk):
