@@ -369,6 +369,27 @@ def delete(request, pk):
         article.delete()
     return redirect('articles:index')
 ```
+<br>
+<br>
 
+#### Questions
+1. articles의 forms와 accounts의 forms가 다른이유?
+    
+    → accounts는 built-in 클래스를 쓰고 거기에서 우리가 조금 바꿔주고 싶은 것만 forms에 작성하고(보통 ModelForm을 쓴다) 나머지 login 같은 경우는 ModelForm 아니고 그냥 Form을 사용한다. 따라서, 이건 굳이 forms에 안 적고, 그냥 views에 보면 내장함수 쓰듯이 바로바로 쓰는 것.
+    
+2. ModelForm을 쓰려고 하면 [models.py](http://models.py)를 무조건 써야 하다고 이해했는데, 그럼 Form을 쓰려고 하면 models.py를 안 써줘도 되는 것인지?
+3. 하나의 app에서 어떤 기능은 db에 저장하고 어떤 건 저장할 필요 없어서 Form, Modelform을 써야 하는 경우가 나뉠 것 같은데 이땐 문제가 생기지 않는지?
+    
+    → accounts, articles는 모두 생성 기능이 들어가있으니까 Modelform을 쓰는데, 앱 안의 views 함수마다 다르게 설정해줄 수 있으니까 문제 없음.
+    
+4. login.html에 왜 form이 가는 곳이 공백 “”으로도 되는 이유?
+    
+    → 실험해보니까 공백으로도 되고, 안에 url accounts:login을 넣어도 됨.
+    
+5. login은 회원 정보를 DB에 저장하지 않고 상관하지 않는데 POST인 이유가 뭘까? 
+    
+    → 유저 정보를 create하지 않는다 뿐이지 session 값은 저장한다. (django_session 테이블)
+    
+6. processors는 현재 로그인한 자신의 정보만 넘겨주고, 회원 리스트 출력 등에는 쓰일 수 없음.
 
 
