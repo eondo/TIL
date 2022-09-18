@@ -1,15 +1,11 @@
 #### INDEX
-
 - Django Form
 - Django ModelForm
 - Handling HTTP requests
 - View decorators
 
 ## Django Form
-
----
-
-지금까지 HTML의 form, input 태그를 통해서 사용자로부터 데이터를 받았음
+지금까지 사용자로부터 데이터를 받아온 방식 : HTML의 form, input 태그
 
 → 현재 우리 Django 서버는 들어오는 요청을 모두 수용하고 있기 때문에 입력한 데이터가 우리가 원하는 데이터 형식이 맞는지에 대한 유효성 검증이 반드시 필요!
 
@@ -17,45 +13,40 @@
 
 - Form에 대한 Django의 역할 : Form과 관련한 유효성 검사를 단순화하고 자동화 할 수 있는 기능을 제공하는 프레임워크
 
-#### Django는 Form에 관련한 세 작업을 처리
+#### Django가 처리하는 Form에 관련한 세 작업
 
 1. 렌더링을 위한 데이터 준비 및 재구성
 2. 데이터에 대한 HTML forms 생성
 3. 클라이언트로부터 받은 데이터 수신 및 처리
 
-→ 기존 input으로 받던 걸 얘로 받겠다!
+→ 기존 input으로 받던 걸 Form으로 받는 작업 처리!
 
 ### Django Form Class
 
 ### 1. Form Class 선언
+- Model과 마찬가지로 상속을 통해 선언함 (forms 라이브러리의 Form 클래스를 상속받음)
+```python
+# articles/forms.py
+from django import forms
 
-Model과 마찬가지로 상속을 통해 선언
-
-(forms 라이브러리의 Form 클래스를 상속받음)
-
-[new]보면
-
-views함수에서 content를 넘겨줘야겠지?
-
-→ 그럼 이제 사용자 입력을 받는 4줄이 label, input으로 이뤄진 4줄이 이제 작성해서 받는 게아니라 얘네를 주석처리를 하고 {{ form }}만 그 자리에 넣어줬는데 label 태그, label의 for 등 모든 게 다 자동으로 채워져있음
-
-→ why? forms.py의 코드가 모두 이를 생성시켜준 것!
-
-- 다른 점 : 2) textarea로 받기로 한 게 적용이 안 되고 그냥 input 태그임, 1) 그룹간 띄어쓰기가 안 되어있음
-- 해결 : 1번 문제는?
-
+class ArticleForm(forms.Form):
 ```
-{{ form.as_p }}
-# 의미 : 각각의 줄을 p태그로 감싸겠다~
-```
+- new.html의 block content 파트
+→ NOW 사용자 입력을 받는 4줄(label, input으로 이뤄진 4줄)이 작성해서 받는 것 대신, view 함수에서 정의한 ArticleForm의 인스턴스 {{ form }}만 그 자리에 넣어줌으로써 label 태그, 태그의 속성 값, label의 for 등 모든 게 다 자동으로 채워짐
+→ Why? forms.py의 코드가 모두 이를 생성시켜준 것!
 
-**From rendering options**
+- Form 이용 시 전과 다른 점 : textarea로 받기로 한 게 적용이 안 되고 그냥 input 태그임, 그룹간 띄어쓰기가 안 되어있음
+  - 두 번째 문제의 해결
+    ```
+    {{ form.as_p }}
+    # 의미 : 각각의 줄을 p 태그로 감싸겠다
+    ```
+    **From rendering options**
+    1. as_p() : 주로 사용, 각 필드가 단락(<p>태그)로 감싸짐
+    2. as_ul()
+    3. as_table()
+  - 첫 번째 문제의 해결 → NEXT
 
-1. as_p() : 주로 사용, 각 필드가 단락(<p>태그)로 감싸짐
-2. as_ul()
-3. as_table()
-
-- 해결 : 2번 문제는?
 
 ### Django의 2가지 HTML input 요소 표현
 
@@ -64,28 +55,38 @@ views함수에서 content를 넘겨줘야겠지?
     2. 템플릿에서 직접 사용됨
 2. Widgets
     1. 웹 페이지의 HTML input 요소 렌더링을 담당
-        1. input 요소의 단순한 출력 부분을 담당
+       - input 요소의 단순한 출력 부분을 담당
     2. Widgets은 반드시 form fields 안에 할당됨
     
     → new.html의 {{}}에는 줄마다의 특성을 줄 수 없기 때문에 당연히! forms.py에서 바꿔야 함을 알 수 있음
     
 
 ### Widgets
-
-Django의 HTML의 input element의 표현을 담당
-
+Django의 HTML의 input element의 표현을 담당\
 단순히 HTML 렌더링을 처리하는 것이며 유효성 검증과 관계 없음
 
-<예제 : 나라 선택하기>
+[practice] 나라 선택을 choice필드로 받아서 출력하기
+```python
+class ArticleForm(forms.Form):
+    NATION_A = 'kr'
+    NATION_B = 'ch'
+    NATION_C = 'jp'
+    NATIONS_CHOICES = [
+        (NATION_A, '한국'),
+        (NATION_B, '중국'),
+        (NATION_C, '일본'),
+    ]
 
----
+    title = forms.CharField(mex_length=10)
+    content = forms.CharField(widget=forms.Textarea())
+    nation = forms.ChoiceField(choices=NATIONS_CHOICES)
+```
 
 ## Django ModelForm
-
-사용자 input을 받는 필드가 많아지면 models에도 forms에도 써야 하고, 너무 많아질 수 있으니까! 사용자 입력이 model 필드와 동일한 필드를 받을 거라면, 그런 form이 필요하다면 맵핑을 시키고 싶다면 → Model을 기반으로한 form을 만들자! ModelForm!
+사용자 input을 받는 필드가 많아지면 models.py에도 forms.py에도 써야 하고, 너무 많아질 수 있는 문제 발생! 
+- 만약 사용자 입력이 model 필드와 동일한 필드를 받을 거라면, 그런 form으로 맵핑을 시키고 싶다면? → Model을 기반으로한 form, **ModelForm**
 
 **ModelForm Class**
-
 Form class를 만들 수 있는 helper class
 
 ### ModelForm 선언
