@@ -23,7 +23,7 @@
 
 ### Django Form Class
 
-### 1. Form Class 선언
+### Form Class 선언
 - Model과 마찬가지로 상속을 통해 선언함 (forms 라이브러리의 Form 클래스를 상속받음)
 ```python
 # articles/forms.py
@@ -86,42 +86,25 @@ class ArticleForm(forms.Form):
 사용자 input을 받는 필드가 많아지면 models.py에도 forms.py에도 써야 하고, 너무 많아질 수 있는 문제 발생! 
 - 만약 사용자 입력이 model 필드와 동일한 필드를 받을 거라면, 그런 form으로 맵핑을 시키고 싶다면? → Model을 기반으로한 form, **ModelForm**
 
-**ModelForm Class**
-Form class를 만들 수 있는 helper class
-
 ### ModelForm 선언
-
-forms 라이브러리에서 파생된 ModelForm 클래스를 상속받음
-
-정의한 ModelForm
-
--
+- forms 라이브러리에서 파생된 ModelForm 클래스를 상속받음
+- 정의한 ModelForm 클래스 안에 Meta 클래스 선언
+- ModelForm을 사용할 경우 참조할 모델이 있어야 하는데, 어떤 모델을 기반으로 form을 작성할 것인지에 대한 정보를 Meta 클래스에 지정
 
 ```python
+from django import forms
+from .models import Article
+
 class ArticleForm(forms.ModelForm):
 
     class Meta:
-        model = 어떤 모델을 기반으로 할지
-        fields = 모델 필드 중 어떤 것을 출력할지
-```
-
-```python
-model = Article # 호출해서 인스턴스 값 할당하는 게 아니라 클래스 참조값 자체를 사용, 등록
-        # 리스트 or 튜플로 작성
+        # 1. 어떤 모델을 기반으로 할지
+        model = Article # 호출해서 인스턴스 값 할당하는 게 아니라 클래스 참조값 자체를 사용, 등록
+        # 2. 모델 필드 중 어떤 것을 출력할지
+        fields = '__all__' # 리스트 or 튜플로 작성
         # fields = ('title', 'content')
-        fields = '__all__'
 ```
-
 → ModelForm은 Model에 대한 정보를 인지하고 있고, models.py에 적혀진 title, content의 필드가 다르기 때문에 알아서 해당 필드에 맞게 바꿔준다! 그래서 아까 만든 Form은 모델과 아무런 관련이 없기 때문에 별도로 widget 설정을 따로 해줘야 했는데 ModelForm은 그럴 필요가 없다! 모델과 아주 밀접한 관련 O
-
-### ModelForm에서의 Meta Class
-
-- ModelForm의 정보를 작성하는 곳
-- ModelForm의 사용할 경우 참조할 모델이 있어야 하는데, ~
-- 엇’
-- fields 속성에 ‘__all__’를 사용하여 사용자로부터 입력받아야 하는 모델의 모든 필드를 포함할 수 있고, exclude 속성 사용시 특정값은 제외할 수 있음
-
-[참고 사항들]
 
 - Meta data
     - 데이터를 표현하기 위한 데이터
@@ -129,19 +112,14 @@ model = Article # 호출해서 인스턴스 값 할당하는 게 아니라 클�
     - ArticleForm(데이터)에 대한 meta(데이터)를 작성한다는 의미로 Class Meta 이름 사용
 - 참조 값과 반환 값
     - 호출하지 않고 이름만 작성하는 방식은 어떤 의미를 가지는가?
-        
         → 함수를 이름만 출력하는 경우는 반환값이 아니라, 참조값을 반환함
-        
         → 호출했을 때는 반환값을 출력함
-        
         → 즉, model = Article에서는 인스턴스 만든 게 아니라 이 클래스 값 자체가 들어간 것인데, 이러한 참조 값은 다른 함수에서 “필요한 시점”에 호출하는 경우에 사용 가능함. 즉, ArticleForm이 해당 클래스를 필요한 시점에 사용하기 위함!
-        
-- 주의사항
-    - Class 안에 Class는 ModelForm이 가지는 설계 자체이기 때문에 실제로 문법적으로 파고들지 말자
 
 ## ModelForm with view functions
+ModelForm으로 인한 view 함수의 구조 변화 발생
 
-#### ‘is_valid()’ method
+**‘is_valid()’ method**
 
 유효성 검사를 실행하고, 데이터가 유효한지 여부를 boolean으로 반환
 
@@ -185,7 +163,6 @@ ModelForm의 인자 instance는 수정 대상이 되는 객체를 지정
 위젯을 적용할 필드에 form필드를 적용하는 법이 권장됨
 
 - form필드에 종속된 형태로 작성됨
-- 
 
 title 안에 label, widget 들어가고 widget 안에 attr 들어감
 
