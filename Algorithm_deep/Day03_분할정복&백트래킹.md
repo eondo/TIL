@@ -1,5 +1,5 @@
 # 분할 정복 & 백트래킹
-
+- 분할 정복 == '사고방식'
 - 분할 정복 기법의 대표적인 알고리즘 : 퀵 정렬, 병합 정렬
 - 상태 공간 트리의 모든 노드를 검색하는 백트래킹
 - 반복 알고리즘을 분할 정복 기반의 알고리즘으로 푼다면? 시간 복잡도 down
@@ -15,8 +15,10 @@
 ## 퀵 정렬
 주어진 배열을 두 개로 분할하고, 각각을 정렬한다.
 - 병합 정렬과의 차이점
-1. 병합 정렬은 그냥 두 부분으로 나눔, 퀵 정렬은 분할할 때 기준 아이템(pivot item) 중심으로, 이보다 작은 것은 왼편, 큰 것은 오른편에 위치시킴 → 퀵 정렬은 pivot을 어떻게 고르냐가 성능을 결정함
+1. 병합 정렬은 그냥 두 부분으로 나눔, 퀵 정렬은 분할할 때 기준 아이템(pivot item) 중심으로, 이보다 작은 것은 왼편, 큰 것은 오른편에 위치시킴
 2. 각 부분 정렬이 끝난 후, 병합정렬은 '병합'이란 후처리 작업(합치는 작업)이 필요하나, 퀵 정렬은 필요로 하지 않음
+3. 시간 복잡도가 O(n^2)이 나올 때가 존재 : 이미 정렬되어 있음 or pivot이 정확하게 반을 나누지 않는 경우 (ex. pivot 값이 하필 해당 리스트의 가장 작은 값으로 뽑힘) → 퀵 정렬은 pivot을 어떻게 고르냐가 성능이 결정됨
+4. BUT 일반적인 케이스는 무작위로 들어오기 때문에 퀵 정렬이 가장 빠르다고 취급!
 
 - 알고리즘
 ```python
@@ -26,7 +28,7 @@ quickSort(A[], l, r)
     # 피봇 왼쪽 구간에서 동일한 작업 진행
     # 피봇 오른쪽 구간에서 동일한 작업 진행
 ```
-#### Hoare-Partition 알고리즘
+### Hoare-Partition 알고리즘
 i, j를 옮겨가면서 서로 교환하는 방식
 ```python
 # 왼쪽 끝을 i, 오른쪽 끝 j으로 두고, i, j가 교차할 때까지 움직임
@@ -47,6 +49,8 @@ i, j를 옮겨가면서 서로 교환하는 방식
 6. 작은 애들의 맨 끝 값과 pivot과 교환! 즉, pivot은 자리를 잡음 → 나머지 분할 된 두 경우를 다시 quicksort 진행(l부터 s - 1까지, s + 1에서 r까지)
 
 ```python
+# 퀵정렬 - 1) 호어 방식
+
 def partition(l, r):
     pivot = A[l]
     i, j = l, r
@@ -75,13 +79,64 @@ print(A)
 ```
 - qsort(A, l, r, compare) : sorting해야 하는 대상이 일차원 배열이 아닌 경우, 비교하는 작업을 한 개의 함수로 만들어서 별도로 구현하는 코드도 볼 수 있음 → 위 코드에서 비교해서 인덱스 정해주는 부분만 정렬할 대상에 맞게 바꿔주면 됨 ex. pivot = A[l][1], while문 안의 A[i][1], A[j][1]로 수정
 
-#### Lomuto Partition 알고리즘
-- 앞에서는 while문 양쪽으로 있던 게 for문 하나를 씀
+### Lomuto Partition 알고리즘
+
 🧷 __과정__
 1. j가 이동하는데 p부터 r - 1까지 가는데 p가 가리키는 애가 피봇 이하면, i가 따라감, 둘의 자리를 바꿈
 2. 즉, i는 피봇보다 작은 것들 중 가장 마지막 자리를 가리킴
 3. i는 고정된 채로 j는 오른쪽으로 움직이다가 j가 피봇보다 작은 조건 만나면 i를 한 칸 옮겨서 피봇보다 큰 자리를 가리키고 i는 피봇보다 작은 값을 가리키고 있으니까 둘을 교환
 4. j가 r - 1까지 오면 for문을 끝내고 i + 1 자리로 피봇을 보내고 원래 자리에 있던 값은 끝응로 보내서 교환
+```python
+# 퀵정렬 - 2) 로무토 방식
+
+def partition(arr, left, right):
+    pivot = arr[right]  # 가장 오른쪽 원소를 피벗으로 지정
+    i, j = left - 1, left
+
+    while j < right:
+        if pivot > arr[j]:
+            i += 1
+            if i < j:
+                arr[i], arr[j] = arr[j], arr[i]
+        j += 1
+
+    arr[i + 1], arr[right] = arr[right], arr[i + 1]
+
+    return i + 1
+
+
+def quick_sort(arr, left, right):
+    if left < right:
+        middle = partition(arr, left, right)
+        quick_sort(arr, left, middle - 1)
+        quick_sort(arr, middle + 1, right)
+
+
+numbers = [3, 2, 4, 6, 9, 1, 8, 7, 5]
+quick_sort(numbers, 0, len(numbers) - 1)
+print(numbers)
+```
+__[참고]__ 안정적 정렬로서 안정적으로 같은 숫자라도 각 객체의 순서를 유지하는 방법
+```python
+# 퀵정렬 - 3) 파이썬스러운 방식 but 메모리 더 많이 씀
+
+def quick_sort(arr):
+    # 더 이상 분할할 수 없는 경우(종료 조건)
+    if len(arr) <= 1:
+        return arr
+
+    pivot = arr[0]  # 가장 왼쪽 원소를 피벗으로 지정
+    arr = arr[1:]  # 피벗 제외하여 새로운 리스트 생성
+
+    left_arr = [i for i in arr if i <= pivot]  # 피벗보다 작거나 같은 원소는 왼쪽으로 분할
+    right_arr = [j for j in arr if j > pivot]  # 피벗보다 큰 원소는 오른쪽으로 분할
+
+    return quick_sort(left_arr) + [pivot] + quick_sort(right_arr)
+
+
+numbers = [3, 2, 4, 6, 9, 1, 8, 7, 5]
+print(quick_sort(numbers))
+```
 <br>
 
 ## 이진 검색
