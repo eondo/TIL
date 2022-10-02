@@ -71,6 +71,30 @@ for i in range(len(arr)): # N = len(arr)
   다른 방법 - 비트 연산자
   
   - 비트 연산자
+[practice] 부분집합의 합 문제 구현하기
+10개의 정수를 입력받아 부분집합의 합의 0이 되는 것이 존재하는지 계산하는 함수를 작성하라.
+```python
+t = int(input())
+for tc in range(1, t + 1):
+    numbers = list(map(int, input().split()))
+    n = len(numbers)
+
+    for i in range(1, 1 << n):  # i는 1부터 2^n - 1까지 돌면서
+        total = 0               # 하나의 i마다 하나의 부분집합의 합 total을 가짐
+
+        for j in range(n):      # 1을 0부터 n - 1만큼 옮기면서
+            if i & (1 << j):    # i의 이진수 자릿수와, 옮긴 1의 자리가 둘 다 1이면
+                total += numbers[j] # 그 자리를 인덱스값으로 하는 numbers 원소가 부분집합에 포함된다는 뜻!
+
+        if total == 0:          # 만약 구한 그렇게 하나의 부분집합의 합이 0이면
+            answer = 1          # 답을 1로 하고
+            break               # 0인 경우가 하나 나온 거니까 중단
+    else:                       # break로 중단된 적이 없다면
+        answer = 0              # 조건을 만족하는 경우가 하나도 없다는 거니까 answer는 0으로 만듦
+
+    print(f'#{tc} {answer}')
+```
+![image](https://user-images.githubusercontent.com/109258497/193445057-43dc7303-87e3-4678-838c-3d34ff901a42.png)
 
 #### 검색(Search)
 - 탐색 키 : 자료를 구별하여 인식할 수 있는 키
