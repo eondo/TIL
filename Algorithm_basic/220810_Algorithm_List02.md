@@ -95,6 +95,45 @@ for tc in range(1, t + 1):
     print(f'#{tc} {answer}')
 ```
 ![image](https://user-images.githubusercontent.com/109258497/193445057-43dc7303-87e3-4678-838c-3d34ff901a42.png)
+[practice] 부분집합을 순열(재귀)로 푸는 방법
+```python
+# s1
+def powerset(arr, depth, total):
+    if total > 10:
+        return
+    if depth == len(numbers):
+        if total == 10:
+            print(arr)
+        return
+
+    else:
+        powerset(arr + [numbers[depth]], depth + 1, total + numbers[depth])
+        powerset(arr, depth + 1, total)
+
+
+numbers = list(range(1, 11))
+powerset([], 0, 0)
+
+# s2
+def powerset(arr, start, total):
+    if total > 10:
+        return
+
+    if total == 10:
+        print(arr)
+        return
+
+    for i in range(start, len(numbers)):
+        arr.append(numbers[i])
+
+        powerset(arr, i + 1, total + numbers[i])
+
+        arr.pop()
+
+
+numbers = list(range(1, 11))
+powerset([], 0, 0)
+```
 
 #### 검색(Search)
 - 탐색 키 : 자료를 구별하여 인식할 수 있는 키
