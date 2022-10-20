@@ -43,6 +43,19 @@ let number = 10
 number = 20 (O)
 let number = 20 (X)
 ```
+```js
+let line = ''
+for (let i = 1; i < 6; i++) {
+  let line = '*'.repeat(i)
+  console.log(line)
+}
+// 되는 이유 : {} 이게 하나의 스코프, 그래서 여기서 안에서는 계속 바꿔지는 재할당이 허용됨
+console.log(line)
+
+// 재할당은 앞에 변수 타입 없이 변수에 값을 지정해주는 것, 
+// 재선언은 앞에 변수 타입 let, const 등이 붙어서 값 지정해주는 것,
+// 따라서 위의 경우 for 위의 line과 for문 안의 line은 다른 것이라 다르게 출력됨
+```
 
 #### const
 읽기 전용이기 때문에 재할당 불가능, 재선언 불가능
