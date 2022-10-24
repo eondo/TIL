@@ -19,7 +19,7 @@
 ### DOM
 문서 객체 모델, 문서의 구조화된 표현을 제공하며 프로그래밍 언어가 DOM 구조
 
-JS는 브라우저에서 DOM API라고 하는 것을 통해서 문서를 동적으로 수정하고, 사용자 인터페이스를 실시간으로 바뀌게 함
+- JS는 브라우저에서 DOM API라고 하는 것을 통해서 문서를 동적으로 수정하고, 사용자 인터페이스를 실시간으로 바뀌게 함
 
 - DOM은 문서를 논리 트리로 표현
 - DOM 메서드를 통해 문서의 구조, 스타일, 컨텐츠를 변경 가능
@@ -29,7 +29,7 @@ JS는 브라우저에서 DOM API라고 하는 것을 통해서 문서를 동적�
   - DOM의 주요 객체(주요 상위 클래스)들을 활용하여 문서를 조작하거나 특정 요소들을 얻을 수 있음
 
 - DOM의 주요 객체
-  - `window`, `document`
+  - window, document
 
 ### window object
 DOM을 표현하는 창
@@ -43,12 +43,9 @@ DOM을 표현하는 창
 - 페이지 컨텐츠의 진입점, 문서 전체를 접근하기 위한 객체 document
 
 - title 탭에 접근 html 코드로 접근한 게 아니라 js로 객체로 접근해서 속성값을 바꿈 즉, 하나의 요소를 속성과 객체로 바라보겠다. 그래야 프로그래밍 언어를 사용할 수 있기 때문에.
-```
-document.title = '싸피'
-'싸피'
-```
 
-### DOM 조작
+
+## DOM 조작
 Document가 제공하는 기능을 사용해 웹 페이지 문서 조작하기
 1. 선택 → 2. 조작
 
@@ -75,28 +72,33 @@ ul-li 타고 가야 하는 경우는?
     // body > ul > li
     // body > ul > li:nth-child(1)
 ```
-- [참고] NodeList
-  - index로만 각 항목에 접근 가능
-  - 배열의 forEach 메서드 및 다양한 배열 메서드 사용 가능
-  - DOM의 변경사항을 실시간으로 반영 X
+[참고] NodeList
+- index로만 각 항목에 접근 가능
+- 배열의 forEach 메서드 및 다양한 배열 메서드 사용 가능
+- querySelectorAll()으로 나오는 NodeList는 정적 콜렉션이므로 DOM의 변경사항을 실시간으로 반영 X → 순회 중이거나 list 길이값을 이미 사용하고 있는 중에 바뀌는 것은 오히려 역효과!
 
 
-### 조작 관련 메서드(생성)
-- document.createElement(tagName)
+### 조작 관련 메서드(생성, 입력, 추가, 삭제)
+- 생성
+  - document.`createElement`(tagName)
   - 작성한 tagName의 HTML 요소를 생성하여 반환
-- 입력
-- 메서드로 분류됐지만 속성값임
-  - Node.innerText : 만들어진 태그 안에 text 형태로 채워지는 내용
-- Node.appendChild()
-  - 누군가의 태그의 자식으로 넣어야 하는데 이 중 어디에 배치할 것인가 -> 하나하나가 DOM 구조, 트리 구조로 되어있어서 어떤 것의 하위로 넣어줘야 함!
+- 입력 관련 메서드
+  - 메서드로 분류됐지만 속성값임
+  - Node.`innerText` : 만들어진 태그 안에 text 형태로 채워지는 내용
+- 추가
+  - Node.`appendChild()`
+  - 문서에 실제로 최종적으로 올리려면 누군가의 태그의 자식으로 넣어야 하는데 이 중 어디에 배치할 것인가 → 하나하나가 DOM 구조, 트리 구조로 되어있어서 어떤 것의 하위로 넣어줘야 함
   - 한 Node(태그)를 특정 부모 Node의 자식 NodeList 중 마지막 자식으로 삽입
   - 한 번에 하나의 Node만 추가 가능
+  - 추가된 Node 객체를 반환
+- 삭제
+  - Node.`removeChild()`
 
-### 삭제
-- Node.remove
+[실습] *02_create_append*
 ```
-document.createElement('hi')
-<hi>​</hi>​
+// 태그 생성
+const h1Tag = document.createElement('h1')
+<h1>​</h1>​
 const h1Tag = document.createElement('hi')
 undefined
 ByteLengthQueuingStrategy
