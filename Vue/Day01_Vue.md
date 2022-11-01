@@ -36,10 +36,9 @@ HTML 내에서도 사용 가능 -> CDN 가져와야 함
 - 연쇄적인 데이터 변경 필요한 경우 -> Vue) 데이터 하나로 관리하기 때문에 데이터 하나를 변수로 뿌려주기만 하면 됨. 컴포넌트 한꺼번에 다 바뀜. 데이터를 사용하고 있는 모든 DOM에서 리렌더링이 발생함.
 
 
-## Vue
-어떤 역할? 어떤 문법?
+## Vue의 역할과 문법
 - MVVM Pattern
-  - 1) Vue Model : event를 듣고, directives로 조작
+  - 1) View Model(Vue) : event를 듣고, directives로 조작
     - View와 연결된 Action을 주고 받음 : DOM에서 발생한 액션을 주고받음
     - Model이 변경되면 뷰 모델도 변경되고 바인딩된 view도 변경
   - 2) DOM : View 우리 눈에 보이는 부분
@@ -48,9 +47,9 @@ HTML 내에서도 사용 가능 -> CDN 가져와야 함
 ![1_1](https://user-images.githubusercontent.com/109258497/198967796-7dda3a63-6ff5-44eb-a58c-65a94b795751.png)
 
 Vue : view model. () 괄호 안에 객체를 넣어서 하나씩 뷰를 사용하기 위한 속성값을 작성함.
-2. 뷰 인스턴스 == 1개의 객체
+1. 뷰 인스턴스 == 1개의 객체
    1. 많은 속성, 메서드를 기능들을 사용 가능
-   2. new 연산자 이용 -> 매번 작성할 필요 없이, 똑같은 구조의 객체를 찍어낼 수 있음 생성자 함수
+   2. 생성자 함수 `Vue()` : new 연산자 이용 → 매번 작성할 필요 없이, 똑같은 구조의 객체를 찍어낼 수 있음 생성자 함수
   ```
   function Member(name, age, sId) {
   this.name = name
@@ -61,13 +60,15 @@ Vue : view model. () 괄호 안에 객체를 넣어서 하나씩 뷰를 사용�
   const member3 = new Member('isaac', 21, 2022654321)
   ```
 #### el (element)
-- View 인스턴스와
+- Vue 인스턴스와 DOM을 연결하는 옵션
 - 생성자 함수의 첫번째 인자
-- 그 영역만 뷰가 관할
+- el로 지정한 영역만 뷰가 관할
 - 뷰 모델로 인해서 모델과 뷰과 마운트 됨
+
 #### data
+- Vue 인스턴스의 데이터 객체 or 인스턴스 속성
 - 데이터 객체는 반드시 기본 객체 {}(Object)여야 함, 들어가는 값은 어떤 타입이든 가능
-- 정의된 속성은 interpolation {{ }}dmf xhdgo view에 렌더링 가능함
+- 정의된 속성은 interpolation {{ }}를 통해 view에 렌더링 가능함
 - 추가된 객체의 각 값들은 this.message 형태로 접근 가능
 
 #### methods
@@ -125,10 +126,10 @@ bye: function () {
 ```html
 <p v-text="message"></p> // p 태그 비어있지만 directive로 변수값 출력
 ```
-#### v-html
-- raw HTML을 실제로 HTML로 표현할 수 있음
+#### v-text, v-html
+- raw HTML을 실제 HTML로 표현할 수 있음
 - 사용자가 입력하거나 제공하는 컨텐츠에서는 절대 사용 금지
-- XSS 공격 참고
+  - XSS 공격 참고
 
 #### v-show, v-if
 1. v-show
