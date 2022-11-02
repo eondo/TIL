@@ -24,7 +24,7 @@
 
 - git init이 되어있는 상태 → git으로 관리 중인 폴더 안에 생성했다면 .git을 삭제하고 push해야 함!
 
-### Vue CLI 프로젝트 구조
+### 🗂 Vue CLI 프로젝트 구조
 #### 📁 node_modules
 - Python에서의 가상 환경의 역할
 - 모듈 간 서로에게 복잡한 의존성을 가짐
@@ -53,25 +53,26 @@
 - `<div id="app"></div>` : vue와 연결된 부분 - 루트 컴포넌트라고 하는 뷰 파일 하나와 연결되어 여기에 출력됨
 
 #### 📁 src
-#### 🧷 assets
-- 정적 파일을 저장하는 디렉토리
-#### 🧷 components
-#### 🧷 App.vue
-- 최상위 컴포넌트를 가짐, index.html의 div의 위치에 App.vue가 렌더링 될 것
-#### 🧷 main.js
-- 웹팩이 프로젝트 빌드를 시작할 때 가장 먼저 사용하는 파일
-- index와 App.vue를 연결시키는 작업이 이루어지는 곳
+#### - 🧷 assets
+  - 정적 파일을 저장하는 디렉토리
+#### - 🧷 components
+#### - 🧷 App.vue
+  - 최상위 컴포넌트를 가짐, index.html의 div의 위치에 App.vue가 렌더링 될 것
+#### 🧷 - main.js
+  - 웹팩이 프로젝트 빌드를 시작할 때 가장 먼저 사용하는 파일
+  - index와 App.vue를 연결시키는 작업이 이루어지는 곳
+<br>
 
-### SFC
+## SFC
 ### Component
 UI를 독립적이고 재사용 가능한 조각들로 나눈 것으로 __기능별로 분화한 코드 조각__
 - 보편적으로 중첩된 컴포넌트들의 tree로 구성
 - App.vue를 루트(최상위) 컴포넌트로 하여 여기서 tree가 만들어지는 구조 → 유지보수, 재사용성, 확장 가능
 
-- 그렇다면 Vue에서 말하는 componenet? 
+- 그렇다면 Vue에서 말하는 **component**란? 
   - 이름이 있는 재사용 가능한 Vue instance!
-- 그렇다면 Vue instance란?
-  - `new Vue()`로 만든 인스턴스 
+- 그렇다면 **Vue instance**란?
+  - `new Vue()`로 만든 인스턴스!
   - 템플릿의 하나의 구역을 담당했으니 컴포넌트의 역할
 
 #### SFC
@@ -81,13 +82,14 @@ UI를 독립적이고 재사용 가능한 조각들로 나눈 것으로 __기능
 - 해당 파일을 vue 인스턴스이자 vue 컴포넌트이며 기능 단위로 작성
 
 ### Vue Component 구조
-#### 템플릿
-#### 스크립트(JS)
+#### 1. 템플릿
+#### 2. 스크립트(JS)
 - 자바스크립트 코드가 작성되는 곳
 - 컴포넌트 정보, 데이터, 메서드 등 vue 인스턴스를 구성하는 대부분이 작성됨
-#### 스타일(CSS)
+#### 3. 스타일(CSS)
 
-### Vue Component 실습
+### 📌 Vue Component 실습
+---
 NOW, 어떻게 연결하고 사용하는지 배워보자!
 
 #### 📍 유의사항
@@ -131,13 +133,10 @@ export default {
   - `The` - 오직 싱글로만 존재할 경우 붙이기
   - 강한 연관성을 가진 컴포넌트 이름 - 하위 컴포넌트로 들어가는 파일의 이름은 상위의 것을 받아서 사용
   - ...
-
-## 데이터 교환
-❓ 이렇게 작성한 컴포넌트 구조에서, 데이터가 어떻게 교환될까?
-
-- 프로젝트 있는 위치에서 `npm install`만 하면 clone 가능
+<br>
 
 ## Pass Props & Emit Events
+❓ 이렇게 작성한 컴포넌트 구조에서, 데이터가 어떻게 교환될까?
 - 한 페이지 내에서 같은 데이터를 공유해야 함
 - BUT 페이지들은 component로 구분이 되어있음
 - 즉, 상위에서 정의된 data를 하위에서 사용하려면 어떻게 보낼 수 있을까?
@@ -150,7 +149,7 @@ export default {
   - `emit` event의 방식 - 이벤트
 
 ### 📌 Pass Props
-#### 정적인 props
+#### 🧷 Static props
 - 요소의 속성을 사용하여 데이터 전달 : `prop-data-name="value"` kebab-case : html에서의 속성값은 대소문자를 구분할 수 없어서. 보내는 쪽 html(케밥) - 받아서 선언하는 곳 javascript(카멜)
   - 예시) msg-title → msgTile로 받아야 함
 ```html
@@ -164,7 +163,7 @@ props: {
   }
 ```
 
-#### Dynamic props
+#### 🧷 Dynamic props
 - 변수를 props로 전달할 수 있음
 - 단순 문자열이 아니라 javascript 표현식으로! → `v-bind` 디렉티브로 데이터를 동적으로 바인딩
 - 부모 컴포넌트의 데이터가 업데이트 되면 자식 컴포넌트로 전달되는 데이터 또한 반영됨
@@ -181,31 +180,35 @@ props: {
 ### 📌 Emit Event
 - 부모 컴포넌트에서 자식 컴포넌트로 데이터를 전달할 때는 간접적으로 이벤트를 발생시킴
 - 이벤트를 발생시키는 것이란?
-  - > 데이터를 이벤트 리스너의 콜백함수의 인자로 담아서 위로 전달
-  - > 상위 컴포넌트는 계속 듣고 있다가 해당 이벤트를 통해 데이터를 받음
+  - 데이터를 이벤트 리스너의 콜백함수의 인자로 담아서 위로 전달
+  - 상위 컴포넌트는 계속 듣고 있다가 해당 이벤트를 통해 데이터를 받음
 
-#### `emit` 메서드
+#### 🧷 `emit` 메서드
 - 부모에게 소리칠 메서드를 호출
 - $emit('event-name') 형식으로 부모에게 even-name이라는 이벤트가 발생했다는 것을 알려서 
 - 실습
 
-#### 과정
-1. 자식 컴포넌트에 있는 버튼 클릭 이벤트를 청취하여 연결된 핸들러 함수 호출
-2. ?
-3. ?
-```html
+#### 🧷 과정 코드
+```js
+// 1. 하위) 자식-부모로 보낼 이벤트 감지하는 버튼 생성
 <button @click="childToParent">클릭!</button>
 
+
+// 2. 하위) 감지한 걸 function으로 emit (데이터를 함께 보내기)
 methods: {
     childToParent: function () {
       this.$emit("child-to-parent", "나는 자식이 보낸 데이터다.");
-    }, // emit(단순 이름, 데이터)
+    }, // emit("단순 이름", "데이터")
 
+
+// 3. 상위) 연결된 하위 태그에서 듣고 있는 파트 작성
 <MyComponentItem
       static-props="MyComponent에서 보낸 데이터"
       :dynamic-props="dynamicProps"
       @child-to-parent="parentGetEvent" // 발생했는지 듣고 있는 이벤트 = 실행할 메서드
 
+
+// 4. 상위) 듣고 있다가 특정 이벤트를 받으면 실행할 메서드 작성
 methods: {
     parentGetEvent: function (childData) {
       console.log("자식 컴포넌트에서 발생한 emit 이벤트를 들었다!");
@@ -230,8 +233,8 @@ methods: {
 - 부모) 그 emit 이벤트를 들으면 실행할 핸들러 함수 연결
 - 받은 데이터는 인자로 받아서 사용
 
-#### case
-> HTML 요소에서 사용 - kebab
+#### [주의] 상황에 따른 case 작성법
+> HTML 요소에서 사용 - kebab  
 > JS에서 사용 - camel
 - props
   - 상위 -> 하위 : HTML 요소로 내림 - kebab
@@ -239,3 +242,5 @@ methods: {
 - emit
   - emit 이벤트 발생, HTML 요소가 이벤트를 청취 - kebab
   - 메서드, 변수명 등은 JS에서 사용 - camel
+- [참고] 다른 환경에서 Vue_CLI 이용하기
+  - 프로젝트 있는 위치에서 `npm install`만 하면 clone 가능
