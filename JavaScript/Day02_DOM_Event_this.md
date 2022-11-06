@@ -1,24 +1,19 @@
-# DOM
-
+### Intro
 - 브라우저에서의 JavaScript
   - 정적인 정보만 보여주던 웹 페이지 → 데이터가 주기적으로 갱신, 사용자와 상호 작용, 애니메이션 동작 O
   - html으로 응답할 땐 요청을 할 때마다 새롭게 응답했는데, DOM을 통해 화면상에서 실시간으로 바뀔 수 있음 
 
-### DOM
+자바스크립트가 client side에서 자스가 추가적으로 사용할 수 있는 기능이 있고, 이것은 API를 통해 가능함.
 
-자바스크립트가 client side에서 자스가 추가적으로 사용할 수 있는 기능이 있고, 이게 API를 통해 가능함.
-
-대표적으로 제공되는 대표 API
-
+- 대표적으로 제공되는 대표 API
 - Browser APIs
-
   - 현재 컴퓨터 환경에 관한 데이터를 제공, 오디오 재생 등 여러가지 복잡한 일을 수행할 수 있게 함
   - JavaScript로 Brower API들을 사용 가능
   - 대표적인 종류 : DOM
 
 
 ### DOM
-문서 객체 모델, 문서의 구조화된 표현을 제공하며 프로그래밍 언어가 DOM 구조
+문서 객체 모델, 문서의 구조화된 표현을 제공, 프로그래밍 언어는 DOM 구조
 
 - JS는 브라우저에서 DOM API라고 하는 것을 통해서 문서를 동적으로 수정하고, 사용자 인터페이스를 실시간으로 바뀌게 함
 
@@ -120,7 +115,7 @@ divTag.removeChild(h1Tag)
 <hi>​DOM 조작​</hi>​
 ```
 
-### 속성값도 추가하고 삭제 가능
+### 속성값 추가 및 삭제 가능
 ### 조작 관련 메서드(속성 조회 및 설정)
 - Element.getAttribute(attributeName)
   - 해당 요소의 지정된 값(문자열)을 반환
@@ -158,7 +153,7 @@ h1Tag.classList.toggle('blue')
 네트워크 활동이나 사용자와의 상호작용 같은 것을 알려주는 객체
 1. DOM 요소는 Event를 받고 `수신`
 2. 받은 event를 `처리`
-   1. event 처리는 주로 `addEventListner()`라는 event 처리기를 다양한 html요소에 부착해서 `처리`함
+   1. event 처리는 주로 `addEventListner()`라는 event 처리기를 다양한 html요소에 부착해서 처리함
 
 #### Event handler
 - 대상에 특정 event가 발생하면, 할 일을 등록하자
@@ -212,6 +207,7 @@ h1Tag.classList.toggle('blue')
 ### Event 취소
 event 동작이 불필요한 순간들이 있음
 a 태그, form 태그의 기본 동작이 필요 없을 때가 있음 -> 다른 기능을 추가하고 싶을 때 기본 동작들을 막아주는 것
+- `preventDefault()`
 - ex. 복사 금지
 ```
 <script>
