@@ -100,7 +100,6 @@ actions: {
 ```
 
 #### mutations
-마니또 다녀감...
 1. mutations 함수 작성하기
 - 첫 번째 인자 : state, 두 번째 인자 : payload
 ```js
@@ -111,7 +110,7 @@ mutations: {
 ```
 
 #### getters
-?
+
 
 ## Lifecyle Hooks
 단계별로 초기화 단계 존재하는데, 이 중간마다 hook이 존재 → 각 단계가 트리거가 되어 특정 로직을 실행할 수 있음
@@ -119,6 +118,60 @@ mutations: {
 ## 📌 Todo with Vuex
 - 구현 기능
   - Todo CRUD
+  - todo별 개수 반영 및 local storage 이용
+
+### Intro
+- 들어갈 component 만들고 상위-하위 연결 완료
+- TodoListItem에서 props로 todo 객체 받아서 {{ todo.title }} 출력해서 READ 확인해보기
+
+### CREATE
+
+- Todo가 새로 만들어지는 곳은 TodoForm
+- 새로운 todo를 입력할 폼 input 태그 작성
+    - 어떤 이벤트가 발생하면 어떤 함수를 실행시킬지 작성
+    - 해당 텍스트를 콘솔에서 확인할 수 있고 주고 받을 수 있도록 v-model에 새로운 값이라는 변수 만들어서 작성
+- 특정 이벤트로 인해 실행되는 함수를 methods 속성에 작성
+    - store의 actions로 보내줄 것이기 때문에 `dispatch()` 사용
+    - 이 `createTodo()` 함수는 여기서 만들어지는 이 것(`this`)을 상점(`$store`)으로 보낼 건데, 그 상점에서 `"createTodo"` 라는 코너로 가자. `this.newTodoInput` 을 들고.
+    - input은 null로 초기화하기
+- actions에 createTodo() 함수 받으면 뭘 해줘야 할지 작성
+    - 단순히 받은 newTodoInput(문자열 타입)을 받아서 바로 commit으로 보내주면 문제 발생 ← why❓ TodoListItem에서는 List에서 Object 타입으로 props를 받는데, 현재는 지금 String 타입으로 받아서 mutations를 통해 문자열을 todos에 push해주고 있으니까!
+    
+    ```python
+    [Vue warn]: Invalid prop: type check failed for prop "todo". Expected Object, got String with value "안녕".
+    ```
+    
+    - actions에서는 실제로 todos에 저장될 형식을 맞춰주고 mutations로 보내줘야 함
+    - createTodo() 코너로 오면 모든 정보를 담은 `context` 에다 newTodoInput을 넣어준다는 의미로 context를 첫번째 인자로 가져오고, 작업을 끝내면 newTodoInput을 담은 context를 통해 mutations로 `CREATE_TODO`  확정하러 가기 위해 `commit('CREATE_TODO', newTodo)` 호출
+- mutations에서 마무리 작업
+    - 현재 state의 todos 배열에 접근해서 받아온 인자로 받아온 newTodo를 push
+    - 즉, 최종적으로 state를 변경함
+
+### DELETE
+
+- TodoListItem에서 todo마다 필요한 삭제 버튼 생성해서 deleteTodo 메서드가 실행되도록 함
+- methods에 deleteTodo() 작성
+    - dispatch로 actions로 보내줄 건데, 상점의 ‘deleteTodo’ 코너로, 현재 삭제할 todo인 `this.todo` 를 함께 보내줌
+- actions와 mutations
+    - actions에서 deleteTodo()로 올 때, context 봉투에 넘겨준 this.todo를 `todoItem` 으로 인자를 받고, 따로 더 데이터에 처리를 해줄 게 없으므로 바로 mutations로 commit을 통해 mutations의 DELETE_TODO 호출
+    - mutations에서 state.todos에 접근해 특정 인덱스의 값을 `splice`
+
+### UPDATE STATUS
+
+- TodoListItem
+    - 개별 todo를 클릭하면 해당 todo의 상태를 변경하겠다는 의미로 태그에 클릭 이벤트 추가 및 methods 작성 (actions 메서드 호출)
+- actions와 mutations
+    - actions에서는 단순히 UPDATE_TODO_STATUS 메서드 호출
+    - mutations에서는 현재 state.todos 중 클릭한 todo의 isCompleted 값을 바꾼 것으로 새롭게 갈아끼워야 하므로 여기서 처리
+    - map 함수를 이용하여 todo와 인자로 들어온 todoItem을 비교하여 같은 경우 해당 isCompleted 값을 반대로 바꿔주는 작업을 거친 후 반환되는 새로운 배열을 state.todos에 저장
+- isCompleted가 새롭게 반영된 todos에 따라서 각 TodoListItem의 아이템들이 취소선이 토글되도록 <style>태그에 `.is_completed` 작성 후 <span> 태그에 vind로 묶어주기 → `:class="{ 'is-completed': todo.isCompleted }"`
+
+### 상태별 todo 개수 계산
+
+- App.vue의 computed와 Store의 getters 이용
+- 미완료된 todo 개수
+    - 전체 개수 - 완료된 개수
+    - 즉, 이미 getters에 들어있는 변수를 활용해야 하므로, 두번째 인자로 getters를 받는 `unCompletedTodosCount(state, getters)` 형식으로 getters에 작성
 
 ### READ
 store의 todos 배열 자체를 가져갈 수 있는 적합한 컴포넌트는 TodoList.vue!
@@ -131,10 +184,8 @@ store의 todos 배열 자체를 가져갈 수 있는 적합한 컴포넌트는 T
 - style 조정의 효과적인 방법
 :class="{ 'is-completed': todo.isCompleted }"
 
-## 상태별 todo 개수 계산
-### 1. 전체 todo 개수
 
-## ?
+### Local Storage
 새로고침하면 사라지는 문제를 해결하려면 어딘가에 저장해야 함. 현재는 브라우저 환경이고 백엔드도 없어서 브라우저에 저장할 수 있을까? 데이터베이스를 내부적으로 가지고 있다!
 - Local storgate에 todo 데이터를 저장하여 브라우저를 종료하고 다시 실행해도 데이터가 보존될 수 있도록 하기
 - window가 local storage 속성값을 통해 .메서드()
