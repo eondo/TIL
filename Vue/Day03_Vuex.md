@@ -1,5 +1,6 @@
 ## Vuex
 Web Application의 상태 == 현재 App이 가지고 있는 Data로 표현
+
 #### ◼ 상태 관리
 - 여러 각각의 component가 같은 상태를 유지할 필요가 있음!
 - 기존) props, emit으로 상태 관리를 해옴 → 같은 데이터를 공유하고 있으므로, 각 컴포넌트가 동일한 상태를 유지하고 있음 → BUT 중첩이 깊어지면 데이터 전달 구조가 깊어짐
@@ -37,7 +38,7 @@ Web Application의 상태 == 현재 App이 가지고 있는 Data로 표현
 - state를 활용하여 계산된 값을 얻고자 할 때 사용
 - 종속된 값이 변경된 경우에만 재계산
 - getters에서 계산된 값은 state에 영향을 미치지 않음
-- 인자: `state`, `getter`
+- 인자: (`state`, `getter`)
 
 #### 동작 cycle
 상태가 component에 렌더링되고, component가 어떤 메서드를 호출 dispatch라면 그 액션이 호출되고, 최종적으로 state 변경하려면 액션 후에 muatation을 호출하여 최종적으로 state 변경하고 다시 렌더링... 반복
@@ -51,9 +52,9 @@ Web Application의 상태 == 현재 App이 가지고 있는 Data로 표현
     - state -> (getters) -> component
 
 ## Vuex 실습
-- actions에 원래대로면 axios 들어가고 여러가지 잡다한 코드 들어갈 것... actions가 하는 일. 현재 실습처럼 actions가 별다른 일 없는 경우엔 actions 생략 가능하긴 함
+- actions에 원래대로면 axios 들어가고 여러가지 잡다한 코드 들어갈 것... actions가 하는 일. BUT 현재 실습처럼 actions가 별다른 일 없는 경우엔 actions 생략 가능함
 
-#### state
+#### ▪ state
 1. store의 state에 message 데이터 정의
 ```js
 state: {
@@ -68,7 +69,7 @@ computed: {
   },
 ```
 
-#### actions
+#### ▪ actions
 - `dispatch(A, B)`
 - A : 호출하고자 하는 actions 함수, B : 넘겨주는 데이터(pay load)
 
@@ -99,7 +100,7 @@ actions: {
     }
 ```
 
-#### mutations
+#### ▪ mutations
 1. mutations 함수 작성하기
 - 첫 번째 인자 : state, 두 번째 인자 : payload
 ```js
@@ -109,7 +110,7 @@ mutations: {
     }
 ```
 
-#### getters
+#### ▪ getters
 
 
 ## Lifecyle Hooks
@@ -125,7 +126,6 @@ mutations: {
 - TodoListItem에서 props로 todo 객체 받아서 {{ todo.title }} 출력해서 READ 확인해보기
 
 ### CREATE
-
 - Todo가 새로 만들어지는 곳은 TodoForm
 - 새로운 todo를 입력할 폼 input 태그 작성
     - 어떤 이벤트가 발생하면 어떤 함수를 실행시킬지 작성
@@ -148,7 +148,6 @@ mutations: {
     - 즉, 최종적으로 state를 변경함
 
 ### DELETE
-
 - TodoListItem에서 todo마다 필요한 삭제 버튼 생성해서 deleteTodo 메서드가 실행되도록 함
 - methods에 deleteTodo() 작성
     - dispatch로 actions로 보내줄 건데, 상점의 ‘deleteTodo’ 코너로, 현재 삭제할 todo인 `this.todo` 를 함께 보내줌
@@ -157,7 +156,6 @@ mutations: {
     - mutations에서 state.todos에 접근해 특정 인덱스의 값을 `splice`
 
 ### UPDATE STATUS
-
 - TodoListItem
     - 개별 todo를 클릭하면 해당 todo의 상태를 변경하겠다는 의미로 태그에 클릭 이벤트 추가 및 methods 작성 (actions 메서드 호출)
 - actions와 mutations
@@ -167,22 +165,10 @@ mutations: {
 - isCompleted가 새롭게 반영된 todos에 따라서 각 TodoListItem의 아이템들이 취소선이 토글되도록 <style>태그에 `.is_completed` 작성 후 <span> 태그에 vind로 묶어주기 → `:class="{ 'is-completed': todo.isCompleted }"`
 
 ### 상태별 todo 개수 계산
-
 - App.vue의 computed와 Store의 getters 이용
 - 미완료된 todo 개수
     - 전체 개수 - 완료된 개수
     - 즉, 이미 getters에 들어있는 변수를 활용해야 하므로, 두번째 인자로 getters를 받는 `unCompletedTodosCount(state, getters)` 형식으로 getters에 작성
-
-### READ
-store의 todos 배열 자체를 가져갈 수 있는 적합한 컴포넌트는 TodoList.vue!
-개별 todo는 props로 내리는 게 나을 것이라 판단
-
-### CREATE
-메서드(위치 : 컴포넌트) createTodo --dispatch--> 액션 --commit--> 최종적으로 mutations에서 액션에서 todo 만들어주면 그걸 push! -> state 조작
-
-### 취소선 조작
-- style 조정의 효과적인 방법
-:class="{ 'is-completed': todo.isCompleted }"
 
 
 ### Local Storage
@@ -195,4 +181,4 @@ store의 todos 배열 자체를 가져갈 수 있는 적합한 컴포넌트는 T
   - `getItem(key)` : key에 해당하는 데이터 조회
 액션은 다른 액션을 호출할 수도 있다!
 
-localstorgate에서 key를 가져오면 됨
+- localstorage에서 key를 가져오면 됨
