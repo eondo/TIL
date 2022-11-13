@@ -72,6 +72,7 @@ computed: {
 #### ▪ actions
 - `dispatch(A, B)`
 - A : 호출하고자 하는 actions 함수, B : 넘겨주는 데이터(pay load)
+- [참고] 액션은 다른 액션을 호출할 수도 있다!
 
 1. actions에 함수 정의
 ```js
@@ -172,13 +173,27 @@ mutations: {
 
 
 ### Local Storage
-새로고침하면 사라지는 문제를 해결하려면 어딘가에 저장해야 함. 현재는 브라우저 환경이고 백엔드도 없어서 브라우저에 저장할 수 있을까? 데이터베이스를 내부적으로 가지고 있다!
+새로고침하면 사라지는 문제를 해결하려면 어딘가에 저장해야 한다. 현재는 브라우저 환경이고 백엔드도 없는데, 브라우저에 저장할 수 있을까
+#### Window.localStorage
+브라우저에서 제공하는 저장공간 중 하나로 데이터베이스를 내부적으로 가지고 있다!
 - Local storgate에 todo 데이터를 저장하여 브라우저를 종료하고 다시 실행해도 데이터가 보존될 수 있도록 하기
-- window가 local storage 속성값을 통해 .메서드()
+- window가 local storage 속성값을 통해 .메서드() 이용
 - 데이터가 문자열 형태로 저장됨
 - 관련 메서드
   - `setItem(key, value)` : key, value 형태로 데이터 저장
   - `getItem(key)` : key에 해당하는 데이터 조회
-액션은 다른 액션을 호출할 수도 있다!
+  - localstorage에서 key를 가져오면 됨
+- 사용
+  - 데이터 → 문자열 형태로 변환 : `JSON.stringify(context.state.todos)`
+  - 문자열 데이터 → object 타입으로 변환 : `JSON.parse(localStorageTodos)`
+#### vuex-persistedstate
+- Vuex state를 자동으롤 브라우저의 Local Storage에 저장해주는 라이브러리 중 하나
+- 적용
+  ```js
+  import createPersistedState from 'vuex-persistedstate'
+  ...
+  plugins: [
+    createPersistedState(),
+  ]
+  ```
 
-- localstorage에서 key를 가져오면 됨
