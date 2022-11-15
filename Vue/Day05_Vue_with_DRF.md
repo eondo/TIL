@@ -21,7 +21,7 @@ DRF API Service를 통해 정보만 제공
 
 ### Vue with DRF
 ### Article 조회
-### 생성
+### Article 생성
 ```
 createArticle() {
   const title = this.title;
