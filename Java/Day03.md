@@ -35,7 +35,7 @@
 
 - default method & static method
 
-# Generics
+## Generic
 다양한 타입의 객체를 다루는 메서드, 컬렉션 클래스에서 컴파일 시에 타입 체크
 - 미리 사용할 타입을 명시해서 형 변환을 하지 않아도 되게 함
 - 라벨링을 통해 해당하는 타입만 담을 수 있는 GenericBox
@@ -52,4 +52,6 @@
 
 - Generic Method
   - 파라미터와 리턴타입으로 type parameter를 갖는 메서드
+  - public <P> P method(P p) -> P는 메서드 호출 시점에 그 타입이 결정됨
+
 
