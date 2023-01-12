@@ -35,3 +35,32 @@ const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 <div>기분 좋은 일기 개수 : {goodCount}</div>
 ```
 
+- 짚고 넘어갈 것
+  - 함수형 컴포넌트를 만들었다고 해서 js의 함수가 아닌 건 아니다. App 컴포넌트가 리턴하는 jsx 문법의 html DOM 요소들은 화면에 반영이 될 뿐, js의 함수가 호출되고 반환하는 것은 같다.
+  - 즉, 리렌더링 -> App 함수가 한 번 더 실행된다.
+
+#### ❓ Memoization을 활용하는 현재 문제 상황
+- 리렌더링될 때, 존재하는 특정 함수가 이미 계산된 값을 그대로 쓰면 됨에도 불구하고 함수가 호출이 되어 필요 없는 연산을 반복한다.
+  - ex. 일기 컨텐츠를 수정할 때, 감정 점수는 수정할 수 없어 getDiaryAnaylsis 함수 실행 결과가 같을 텐데 컨텐츠 수정으로 인한 리렌더링으로 함수가 또 호출되고 있는 상황
+
+#### 4. `useMemo()` 함수 사용
+- 기존 getDiaryAnalysis 함수를 useMemo안에 넣어 콜백 함수 꼴로 만듦
+  - [data.length]를 콜백 함수 뒤에다 추가하여 값이 변화할 때마다 콜백함수가 다시 실행되어 getAnalysis가 아무리 호출하여도 data의 길이가 변하지 않는 이상, 연산을 하지 않고 똑같은 return을 반환한다.
+- TypeError: getDA is not a function 에러
+  - 값을 리턴받으므로 값으로 사용
+```js
+const getDiaryAnalysis = useMemo(() => {
+    if (data.length === 0) {
+      return { goodcount: 0, badCount: 0, goodRatio: 0 };
+    }
+    console.log("일기 분석 시작");
+
+    const goodCount = data.filter((it) => it.emotion >= 3).length;
+    const badCount = data.length - goodCount;
+    const goodRatio = (goodCount / data.length) * 100.0;
+    return { goodCount, badCount, goodRatio };
+  }, [data.length]);
+
+// 리턴 값을 함수 호출이 아니라 변수로 받으므로 다음과 같이 변경
+const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
+```
