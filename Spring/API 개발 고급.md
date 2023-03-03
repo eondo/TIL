@@ -25,8 +25,7 @@ initDb
 ### 엔티티를 DTO로 변환
 
 - List로 내보내면 안 되고, Result로 한 번 감싸야 함
-- API 스펙을 명확하게 규정해야 함
-  -
+- ## API 스펙을 명확하게 규정해야 함
 - DTO가 엔티티를 파라미터로 받는 건 가능
 
 ```java
@@ -74,3 +73,7 @@ static class SimpleOrderDto { // 이건
   제일 먼저 ORDER 조회, MEMBER 조회, D조회... 쿼리 총 3번 나가는데 ORDER, MEMBER, D조회하면 끝나야 할 것 같음. MEMBER, D에도 ID값 하나만 넘긴다. 첫번째 주문서는 쿼리 3번으로 완성. 두번째 주문서는 또 M, D를 또 가져온다. -> JPA의 LAZY 로딩 메커니즘 이해하기
   - ORDER 조회 -> 이때 SQL 1Q번 -> 결과 주문(ROW)수가 2개
   - 루프가 돌 때, ORDER 개수만큼 루프를 도니까 엄청나게 많은 쿼리를 날리게 됨 -> N + 1의 문제 (현재의 경우 1 + N + N번)
+
+### JPA에서 DTO로 바로 조회
+
+생성자를 Order order로 직접적으로 엔티티를
